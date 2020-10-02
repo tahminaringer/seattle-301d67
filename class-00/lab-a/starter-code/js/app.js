@@ -1,20 +1,20 @@
 'use strict';
 
-let names = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'usb', 'water-can', 'wine-glass'];
+const names = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'usb', 'water-can', 'wine-glass'];
 
-let leftImage = document.getElementById('left');
-let centerImage = document.getElementById('center');
-let rightImage = document.getElementById('right');
+const leftImage = document.getElementById('left');
+const centerImage = document.getElementById('center');
+const rightImage = document.getElementById('right');
 
-let allProducts = [];
-let container = document.getElementById('image_container');
-let viewed = [];
-let labels = [];
-let pics = [leftImage, centerImage, rightImage];
-let list = document.getElementById('productlist');
+const allProducts = [];
+const container = document.getElementById('image_container');
+const viewed = [];
+const labels = [];
+const pics = [leftImage, centerImage, rightImage];
+const list = document.getElementById('productlist');
 let totalClicks = 0;
-let views = [];
-let votes = [];
+const views = [];
+const votes = [];
 
 function Product(name) {
   this.name = name;
@@ -30,7 +30,7 @@ function makeRandom() {
 
 function displayPics(){
   while(viewed.length < 6){
-    let rando = makeRandom();
+    const rando = makeRandom();
     while(!viewed.includes(rando)){
       viewed.push(rando);
     }
@@ -41,7 +41,7 @@ function displayPics(){
   console.log(viewed);
 
   for (let i = 0; i < 3; i++){
-    let temp = viewed.shift();
+    const temp = viewed.shift();
     pics[i].src = allProducts[temp].path;
     pics[i].id = allProducts[temp].name;
     allProducts[temp].views += 1;
@@ -53,12 +53,17 @@ function handleClick(event) {
     return alert('Be sure to click directly on an image!!');
   }
   totalClicks += 1;
+  
   if(totalClicks > 24) {
     container.removeEventListener('click', handleClick);
     container.style.display = 'none';
     showList();
     makeChart();
   }
+  // let allProductsLocalStorage = JSON.parse(localStorage.busmall);
+  // for (let i = 0; i < allProductsLocalStorage.length; i++) {
+  //   allProducts.push(allProductsLocalStorage[i]);
+  // }
   for(let i = 0; i < names.length; i++){
     if(event.target.id === allProducts[i].name) {
       allProducts[i].votes += 1;
@@ -72,7 +77,7 @@ function handleClick(event) {
 
 function showList() {
   for(let i = 0; i < allProducts.length; i++) {
-    let liEl = document.createElement('li');
+    const liEl = document.createElement('li');
     liEl.textContent = allProducts[i].name + ' has ' + allProducts[i].votes + ' votes in ' + allProducts[i].views + ' views';
     list.appendChild(liEl);
   }
@@ -88,7 +93,7 @@ function makeChartData(){
 
 function makeChart(){
   makeChartData();
-  let ctx = document.getElementById('chartypants').getContext('2d');
+  const ctx = document.getElementById('chartypants').getContext('2d');
   new Chart(ctx, { //eslint-disable-line
     type: 'bar',
     data: {
@@ -125,7 +130,10 @@ document.getElementById('bus').addEventListener('click', function(){
 
 if(localStorage.busmall){
   console.log('Local storage data exists');
-  allProducts = JSON.parse(localStorage.busmall);
+  let allProductsLocalStorage = JSON.parse(localStorage.busmall);
+  for (let i = 0; i < allProductsLocalStorage.length; i++) {
+    allProducts.push(allProductsLocalStorage[i]);
+  }
 } else {
   console.log('There is no local storage data; initialize app by creating instances');
   for(let i = 0; i < names.length; i++) {
